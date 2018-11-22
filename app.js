@@ -1,7 +1,4 @@
 (function() {
-    // Игра крестики-нолики
-    // todo: подсветить выигрышную комбинацию
-
     var board = new Array(9)
     var cells = document.getElementById('board').querySelectorAll('td')
     var gameOver = false
@@ -14,6 +11,18 @@
         diagRL: [2, 4, 6],
         vertical: [1, 4, 7],
         horizontal: [3, 4, 5]
+    }
+
+    var isBoardFilled = function() {
+        var counter = 0
+
+        for (var i = 0; i < board.length; i++) {
+            if (board[i]) {
+                counter++
+            }
+        }
+
+        return counter === board.length
     }
 
     /**
@@ -64,31 +73,26 @@
     }
 
     var playTurn = function() {
-        // 1. проверить, что у противника непоследний ход, иначе заблокировать
+
+        // найти свой символ и попробовать продолжить
         for (name in directions) {
             var indexes = directions[name]
-            var counter = 0
-            var hasEmptyCell = -1
 
-            // count turns in all directions
+            // Сначала найти свои двойки
+            var countX = 0
+            var hasEmptyCell = -1
             indexes.forEach(function(index) {
-                if (board[index] === 'X') {
-                    ++counter
+                if (board[index] === '0') {
+                    ++countX
                 } else if (!board[index]) {
                     hasEmptyCell = index
                 }
             })
 
-            if (counter === 2 && hasEmptyCell !== -1) {
-                // заблокировать свободную клетку противнику
+            if (countX === 2 && hasEmptyCell !== -1) {
                 paintCell(hasEmptyCell, '0')
                 return
             }
-        }
-
-        // 2. найти свой символ и попробовать продолжить
-        for (name in directions) {
-            var indexes = directions[name]
 
             if (indexes[0] === 'X') {
                 if (!indexes[1]) {
@@ -117,7 +121,29 @@
             }
         }
 
-        // 3. или найти свободные трешки, поставить крестик
+        // проверить, что у противника непоследний ход, иначе заблокировать
+        for (name in directions) {
+            var indexes = directions[name]
+            var counter = 0
+            var hasEmptyCell = -1
+
+            // count turns in all directions
+            indexes.forEach(function(index) {
+                if (board[index] === 'X') {
+                    ++counter
+                } else if (!board[index]) {
+                    hasEmptyCell = index
+                }
+            })
+
+            if (counter === 2 && hasEmptyCell !== -1) {
+                // заблокировать свободную клетку противнику
+                paintCell(hasEmptyCell, '0')
+                return
+            }
+        }
+
+        // или найти свободные трешки, поставить крестик
         for (var i = 0; i < board.length; i++) {
             if (!board[i]) {
                 paintCell(i, '0')
@@ -139,6 +165,8 @@
                     var result = checkRules()
     
                     if (result === 0 || result === 1) {
+                        showMessage(result)
+                    } else if (isBoardFilled()) {
                         showMessage(result)
                     }
                 } else {
