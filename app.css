@@ -1,0 +1,17 @@
+table {
+    margin: 0 auto;
+}
+
+td {
+    font-size: 60px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    height: 100px;
+    width: 100px;
+}
+
+#message {
+    margin: 0 auto;
+    width: 300px;
+    color: green;
+}
