@@ -1,4 +1,4 @@
-(function() {
+var Game = (function() {
     var board = new Array(9)
     var cells = []
     var gameOver = false
@@ -175,35 +175,40 @@
         }
 
         body.appendChild(table)
+
+        addNodeListeners()
     }
 
-    init()
+    var addNodeListeners = function() {
+        cells = document.getElementById('board').querySelectorAll('td')
 
-    cells = document.getElementById('board').querySelectorAll('td')
-
-    cells.forEach(function(cell) {
-        cell.addEventListener('click', function() {
-            if (!cell.innerHTML && gameOver === false) {
-                paintCell(Number(cell.id) - 1, 'X')
-    
-                var result = checkRules()
-    
-                if (result === -1) {
-                    playTurn()
-    
+        cells.forEach(function(cell) {
+            cell.addEventListener('click', function() {
+                if (!cell.innerHTML && gameOver === false) {
+                    paintCell(Number(cell.id) - 1, 'X')
+        
                     var result = checkRules()
-    
-                    if (result === 0 || result === 1) {
+        
+                    if (result === -1) {
+                        playTurn()
+        
+                        var result = checkRules()
+        
+                        if (result === 0 || result === 1) {
+                            showMessage(result)
+                        } else if (isBoardFilled()) {
+                            showMessage(result)
+                        }
+                    } else {
                         showMessage(result)
-                    } else if (isBoardFilled()) {
-                        showMessage(result)
+                        gameOver = true
                     }
-                } else {
-                    showMessage(result)
-                    gameOver = true
                 }
-            }
+            })
         })
-    })
+    }
 
+    return {
+        init: init
+    }
 })()
