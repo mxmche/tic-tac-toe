@@ -1,6 +1,6 @@
 (function() {
     var board = new Array(9)
-    var cells = document.getElementById('board').querySelectorAll('td')
+    var cells = []
     var gameOver = false
     var directions = {
         up: [0, 1, 2],
@@ -52,15 +52,15 @@
     }
 
     var showMessage = function(code) {
-        var message = 'Standoff'
+        var message = 'Ничья'
 
         if (code === 1) {
-            message = 'X won'
+            message = 'X выиграли'
         } else if (code === 0) {
-            message = '0 won'
+            message = '0 выиграли'
         }
 
-        document.getElementById('message').innerHTML = message
+        alert(message)
     }
 
     /**
@@ -151,6 +151,35 @@
             }
         }
     }
+
+    function init() {
+        var body = document.getElementsByTagName('body')[0]
+        var table = document.createElement('table')
+        var id = 1
+
+        table.id = 'board'
+        table.setAttribute('border', '1')
+
+        for (var i = 0; i < 3; i++) {
+
+            var tr = document.createElement('tr')
+
+            for (var j = 0; j < 3; j++) {
+                var td = document.createElement('td')
+                td.id = id
+                tr.appendChild(td)
+                id++
+            }
+
+            table.appendChild(tr)
+        }
+
+        body.appendChild(table)
+    }
+
+    init()
+
+    cells = document.getElementById('board').querySelectorAll('td')
 
     cells.forEach(function(cell) {
         cell.addEventListener('click', function() {
